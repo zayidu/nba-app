@@ -1,10 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import NewsSlider from '../Widgets/NewsSlider/NewsSlider';
 
 const Home = (props) => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <NewsSlider
+        type="featured"
+        start={0}
+        end={3}
+        settings={{
+          dots: false,
+        }}
+      />
+    </div>
+  );
 };
-
-Home.propTypes = {};
 
 export default Home;
