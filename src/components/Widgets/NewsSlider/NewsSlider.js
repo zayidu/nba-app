@@ -9,6 +9,7 @@ export default class NewsSlider extends Component {
   };
 
   componentWillMount() {
+    // debugger;
     axios
       .get(`${URL}/articles?_start=${this.props.start}&_end=${this.props.end}`)
       .then((response) => {

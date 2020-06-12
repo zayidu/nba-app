@@ -15,7 +15,7 @@ const SliderTemplates = (props) => {
     slidesToScroll: 1,
     ...props.settings,
   };
-
+  // debugger;
   switch (props.type) {
     case 'featured':
       template = props.data.map((item, i) => {
