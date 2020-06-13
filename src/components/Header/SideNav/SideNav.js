@@ -13,8 +13,9 @@ export const SideNavigation = (props) => {
           maxWidth: '220px',
         }}
       >
-        <SideNavItems />
-      </SideNav>
+        <SideNavItems {...props} />
+      </SideNav>{' '}
+      .
     </div>
   );
 };
