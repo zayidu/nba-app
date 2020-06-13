@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { URL } from '../../../config';
+// import axios from 'axios';
+// import { URL } from '../../../config';
+import {
+  firebaseTeams,
+  firebaseArticles,
+  firebaseLooper,
+} from '../../../firebase';
 import styles from './newsList.css';
 import Button from '../Buttons/Button';
 import CardInfo from '../CardInfo/CardInfo';
@@ -23,26 +28,51 @@ export default class NewsList extends Component {
 
   async request(start, end) {
     if (this.state.teams.length < 1) {
-      await axios.get(`${URL}/teams`).then((response) => {
+      firebaseTeams.once('value').then((snapshot) => {
+        const teams = firebaseLooper(snapshot);
         this.setState({
-          teams: response.data,
+          teams,
         });
       });
+
+      // await axios.get(`${URL}/teams`).then((response) => {
+      //   this.setState({
+      //     teams: response.data,
+      //   });
+      // });
     }
-    await axios
-      .get(`${URL}/articles?_start=${start}&_end=${end}`)
-      .then((response) => {
+
+    firebaseArticles
+      .orderByChild('id')
+      .startAt(start)
+      .endAt(end)
+      .once('value')
+      .then((snapshot) => {
+        const artiles = firebaseLooper(snapshot);
         this.setState({
-          items: [...this.state.items, ...response.data],
+          items: [...this.state.items, ...artiles],
           start,
           end,
         });
-      });
+      })
+      .catch((e) => console.log(e));
+    // await axios
+    //   .get(`${URL}/articles?_start=${start}&_end=${end}`)
+    //   .then((response) => {
+    //     this.setState({
+    //       items: [...this.state.items, ...response.data],
+    //       start,
+    //       end,
+    //     });
+    //   });
   }
 
   loadmore() {
     let end = this.state.end + this.state.amount;
-    this.request(this.state.end, end);
+    this.request(
+      this.state.end + 1, // as the Id in Firebase Objects starts at 0
+      end
+    );
   }
 
   renderNews(type) {
