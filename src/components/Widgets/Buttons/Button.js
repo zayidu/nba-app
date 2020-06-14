@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './buttons.css';
 
 const Button = (props) => {
-  console.log(props);
+  // console.log(props);
   let template = null;
   switch (props.type) {
     case 'loadmore':

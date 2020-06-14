@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { firebase } from '../../../firebase';
 
 const SideNavItems = (props) => {
-  console.log(props);
+  // console.log(props);
   const items = [
     {
       type: style.option,

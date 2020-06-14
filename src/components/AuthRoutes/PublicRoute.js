@@ -8,7 +8,7 @@ const PublicRoute = ({ user, component: Component, ...rest }) => {
       component={(props) =>
         rest.restricted ? (
           user ? (
-            <Redirect to="/dashboard" />
+            <Redirect to="/" />
           ) : (
             <Component {...props} user={user} />
           )

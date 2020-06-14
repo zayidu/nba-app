@@ -155,7 +155,7 @@ export default class NewsList extends Component {
     return template;
   }
   render() {
-    console.log(this.state.items);
+    // console.log(this.state.items);
     return (
       <div>
         <TransitionGroup component="div" className="list">
