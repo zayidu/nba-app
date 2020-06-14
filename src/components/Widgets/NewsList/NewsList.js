@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // import axios from 'axios';
 // import { URL } from '../../../config';
 import {
+  firebase,
   firebaseTeams,
   firebaseArticles,
   firebaseLooper,
@@ -21,12 +22,13 @@ export default class NewsList extends Component {
     amount: this.props.end,
   };
 
-  async componentWillMount() {
+  componentWillMount() {
     // debugger;
     this.request(this.state.start, this.state.end);
   }
 
-  async request(start, end) {
+  request = (start, end) => {
+    // debugger;
     if (this.state.teams.length < 1) {
       firebaseTeams.once('value').then((snapshot) => {
         const teams = firebaseLooper(snapshot);
@@ -44,16 +46,45 @@ export default class NewsList extends Component {
 
     firebaseArticles
       .orderByChild('id')
+      // .orderByChild('team')
       .startAt(start)
       .endAt(end)
       .once('value')
       .then((snapshot) => {
         const artiles = firebaseLooper(snapshot);
-        this.setState({
-          items: [...this.state.items, ...artiles],
-          start,
-          end,
+
+        const asyncURLFunction = (item, index, cb) => {
+          firebase
+            .storage()
+            .ref('images')
+            .child(item.image)
+            .getDownloadURL()
+            .then((url) => {
+              artiles[index].image = url;
+              cb();
+            });
+        };
+        // Promises
+        let requests = artiles.map((item, index) => {
+          return new Promise((resolve) => {
+            // debugger;
+            asyncURLFunction(item, index, resolve);
+          });
         });
+
+        Promise.all(requests).then(() => {
+          this.setState({
+            items: [...this.state.items, ...artiles],
+            start,
+            end,
+          });
+        });
+
+        // this.setState({
+        //   items: [...this.state.items, ...artiles],
+        //   start,
+        //   end,
+        // });
       })
       .catch((e) => console.log(e));
     // await axios
@@ -65,15 +96,16 @@ export default class NewsList extends Component {
     //       end,
     //     });
     //   });
-  }
+  };
 
-  loadmore() {
+  loadmore = () => {
+    // debugger;
     let end = this.state.end + this.state.amount;
     this.request(
       this.state.end + 1, // as the Id in Firebase Objects starts at 0
       end
     );
-  }
+  };
 
   renderNews(type) {
     let template = null;
@@ -131,7 +163,8 @@ export default class NewsList extends Component {
                 <div
                   className={styles.left}
                   style={{
-                    background: `url('/images/articles/${item.image}')`,
+                    // background: `url('/images/articles/${item.image}')`,
+                    background: `url('${item.image}')`,
                   }}
                 >
                   <div></div>

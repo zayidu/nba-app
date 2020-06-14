@@ -15,9 +15,10 @@ const Footer = () => {
       <a
         href="https://zayidu.github.io/portfolio/"
         target="_blank"
+        rel="noopener noreferrer"
         className={styles.right}
       >
-        ©Creator : zayidu
+        © Developed by Zayidu
       </a>
     </div>
   );

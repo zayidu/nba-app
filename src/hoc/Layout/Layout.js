@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 
 import './layout.css';
 import Header from '../../components/Header/Header';

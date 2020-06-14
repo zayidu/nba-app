@@ -14,7 +14,7 @@ const Home = (props) => {
         start={0}
         end={3}
         settings={{
-          dots: false,
+          dots: true,
         }}
       />
 

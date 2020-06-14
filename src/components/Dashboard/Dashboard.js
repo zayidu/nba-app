@@ -57,7 +57,7 @@ export default class Dashboard extends Component {
       },
       team: {
         element: 'select',
-        value: [],
+        value: '',
         config: {
           name: 'team_input',
           options: [],
@@ -73,7 +73,7 @@ export default class Dashboard extends Component {
     },
   };
 
-  updateForm(element, content = '') {
+  updateForm = (element, content = '') => {
     // debugger;
     const newformData = {
       ...this.state.formData,
@@ -99,8 +99,8 @@ export default class Dashboard extends Component {
     this.setState({
       formData: newformData,
     });
-  }
-  validate(element) {
+  };
+  validate = (element) => {
     let error = [true, ''];
 
     if (element.validation.required) {
@@ -109,9 +109,9 @@ export default class Dashboard extends Component {
       error = !valid ? [valid, message] : error;
     }
     return error;
-  }
+  };
 
-  submitButton() {
+  submitButton = () => {
     return this.state.loading ? (
       'Loading...'
     ) : (
@@ -119,9 +119,9 @@ export default class Dashboard extends Component {
         <button type="submit">Add Post</button>
       </div>
     );
-  }
+  };
 
-  submitForm(event) {
+  submitForm = (event) => {
     // debugger;
     event.preventDefault();
     let dataToSubmit = {};
@@ -134,7 +134,7 @@ export default class Dashboard extends Component {
     for (let key in this.state.formData) {
       formIsValid = this.state.formData[key].valid && formIsValid;
     }
-
+    // debugger;
     if (formIsValid) {
       // Submit Post
       console.log(dataToSubmit);
@@ -148,46 +148,52 @@ export default class Dashboard extends Component {
         .limitToLast(1)
         .once('value')
         .then((snapshot) => {
+          // firebaseArticles
+          //   .orderByChild('id')
+          //   // .orderByChild('team')
+          //   .limitToLast(1)
+          //   .once('value')
+          //   .then((snapshot) => {
           let articleId = null;
           snapshot.forEach((childSnapshot) => {
-            articleId = childSnapshot.val().id + 1;
+            articleId = childSnapshot.val().id;
           });
-          dataToSubmit['id'] = articleId;
+          dataToSubmit['id'] = articleId + 1;
+          // dataToSubmit['id'] = 0;
+          dataToSubmit['date'] = firebase.database.ServerValue.TIMESTAMP;
+
+          dataToSubmit['team'] = parseInt(dataToSubmit['team']);
+          console.log(dataToSubmit);
+          // debugger;
+          // Post
+          firebaseArticles
+            .push(dataToSubmit)
+            .then(
+              // Posted Article is returned, then we can Redirect
+              (article) => {
+                this.props.history.push(`articles/${article.key}`);
+              }
+            )
+            .catch((error) =>
+              this.setState({
+                postError: error.messsage,
+              })
+            );
         });
-
-      dataToSubmit['date'] = firebase.database.ServerValue.TIMESTAMP;
-
-      dataToSubmit['team'] = parseInt(dataToSubmit['team']);
-      console.log(dataToSubmit);
-      // debugger;
-      // Post
-      firebaseArticles
-        .push(dataToSubmit)
-        .then(
-          // Posted Article is returned, then we can Redirect
-          (article) => {
-            this.props.history.push(`articles/${article.key}`);
-          }
-        )
-        .catch((error) =>
-          this.setState({
-            postError: error.messsage,
-          })
-        );
     } else {
       this.setState({
         postError: 'Something went wrong!',
       });
     }
-  }
+  };
 
-  showError() {
+  showError = () => {
     return this.state.postError !== '' ? (
       <div className={styles.error}>{this.state.postError}</div>
     ) : (
       ''
     );
-  }
+  };
 
   onEditorStateChange = (editorState) => {
     let contentState = editorState.getCurrentContent();
@@ -229,7 +235,8 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div className={styles.postContainer}>
-        <form onSubmit={this.submitForm.bind(this)}>
+        {/* <form onSubmit={this.submitForm.bind(this)}> */}
+        <form onSubmit={this.submitForm}>
           <h2>Add Post</h2>
           <FileUploader filename={(filename) => this.storeFileName(filename)} />
           <FormFields
