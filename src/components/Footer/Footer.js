@@ -13,7 +13,7 @@ const Footer = () => {
         @NBA {CURRENT_YEAR} All rights reserved.{' '}
       </div>
       <a
-        href="https://github.com/zayidu/zDevConnector"
+        href="https://zayidu.github.io/portfolio/"
         target="_blank"
         className={styles.right}
       >
