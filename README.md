@@ -1,3 +1,24 @@
+## Welcome to **Zayidu**'s one of the Open-Source Project, **NBA App**
+
+This is actually a course driven Project.
+
+If you find any bugs in the functionality please feel Free to post it in the issues section here.
+
+Find the URI below:
+https://nba-full-stack-59c4b.web.app/
+
+Please view it on Mobile devices else if you're checking in from your PC's or Laptops, Click 'Fn + F12' then 'Ctrl/Cmnd + Shift + M' and choose your device. Enjoy!
+
+# My zDevConnector Profile/Portfolio:
+
+https://powerful-brook-38361.herokuapp.com/profile/5eccd4c4672f18b60a4e7bc4
+
+This repository is licensed under [NBA App - Zayidu](https://nba-full-stack-59c4b.web.app/) (c) 2020 Zayidu, Inc.
+
+Thanks for reading. I love you... Good day to you!
+
+## Project Details Guide:
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
