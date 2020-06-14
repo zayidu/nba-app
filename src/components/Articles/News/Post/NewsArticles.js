@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import axios from 'axios';
 // import { URL } from '../../../../config';
 import {
+  firebase,
   firebaseDB,
   firebaseLooper,
   firebaseTeams,
@@ -14,8 +15,25 @@ class NewsArticles extends Component {
   state = {
     article: [],
     team: [],
+    imageURL: '',
   };
-
+  getImageURL = (filename) => {
+    // Getting the Current Article's Team Image
+    // let imageURL = '';
+    firebase
+      .storage()
+      .ref('images')
+      .child(filename)
+      .getDownloadURL()
+      .then((url) => {
+        // imageURL = url;
+        // debugger;
+        this.setState({
+          imageURL: url,
+        });
+      });
+    // return imageURL;
+  };
   componentWillMount() {
     firebaseDB
       .ref(`articles/${this.props.match.params.id}`)
@@ -23,16 +41,21 @@ class NewsArticles extends Component {
       .then((snapshot) => {
         let article = snapshot.val();
         console.log(article);
+        // debugger;
         firebaseTeams
           .orderByChild('teamId')
           .equalTo(article.team)
           .once('value')
           .then((snapshot) => {
             const team = firebaseLooper(snapshot);
-
+            // Getting the Image
+            this.getImageURL(article.image);
+            // debugger;
+            // const imageURL = this.getImageURL(article.image);
             this.setState({
               article,
               team,
+              // imageURL,
             });
           });
       });
@@ -63,9 +86,18 @@ class NewsArticles extends Component {
           <h1>{article.title}</h1>
           <div
             className={styles.articleImage}
-            style={{ background: `url('/images/articles/${article.image}')` }}
+            style={{
+              // background: `url('/images/articles/${article.image}')`
+              background: `url('${this.state.imageURL}')`,
+            }}
           ></div>
-          <div className={styles.artileText}>{article.body}</div>
+          <div
+            className={styles.artileText}
+            // Setting the HTML form WYSIWYG text that was saved in the Article
+            dangerouslySetInnerHTML={{ __html: article.body }}
+          >
+            {/* {article.body} */}
+          </div>
         </div>
       </div>
     );
