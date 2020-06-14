@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import axios from 'axios';
-import { firebaseArticles, firebaseLooper } from '../../../firebase';
+import { firebase, firebaseArticles, firebaseLooper } from '../../../firebase';
 import SliderTemplates from './SliderTemplates';
 // import { URL } from '../../../config';
 
@@ -24,9 +24,50 @@ export default class NewsSlider extends Component {
         //   });
         // });
         const news = firebaseLooper(snapshot);
-        this.setState({
-          news,
+
+        const asyncURLFunction = (item, index, cb) => {
+          firebase
+            .storage()
+            .ref('images')
+            .child(item.image)
+            .getDownloadURL()
+            .then((url) => {
+              news[index].image = url;
+              cb();
+            });
+        };
+        // Promises
+        let requests = news.map((item, index) => {
+          return new Promise((resolve) => {
+            // debugger;
+            asyncURLFunction(item, index, resolve);
+          });
         });
+
+        Promise.all(requests).then(() => {
+          this.setState({
+            news,
+          });
+        });
+
+        // Re-Renders Every time the state gets updated.
+        // news.forEach((item, i) => {
+        //   firebase
+        //     .storage()
+        //     .ref('images')
+        //     .child(item.image)
+        //     .getDownloadURL()
+        //     .then((url) => {
+        //       news[i].image = url;
+        //       this.setState({
+        //         news,
+        //       });
+        //     });
+        // });
+
+        // this.setState({
+        //   news,
+        // });
       });
 
     // axios

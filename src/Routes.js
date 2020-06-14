@@ -8,19 +8,62 @@ import NewsArticle from './components/Articles/News/Post/NewsArticles';
 import VideoArticle from './components/Articles/Videos/Video/VideoArticle';
 import SignIn from './components/SignIn/SignIn';
 import Dashboard from './components/Dashboard/Dashboard';
+import PublicRoute from './components/AuthRoutes/PublicRoute';
+import PrivateRoute from './components/AuthRoutes/PrivateRoute';
 
 const Routes = (props) => {
   console.log(props);
   return (
     <Layout user={props.user}>
       <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/news" exact component={NewsMain} />
-        <Route path="/articles/:id" exact component={NewsArticle} />
-        <Route path="/videos/:id" exact component={VideoArticle} />
-        <Route path="/videos" exact component={VideosMain} />
-        <Route path="/sign-in" exact component={SignIn} />
-        <Route path="/dashboard" exact component={Dashboard} />
+        <PublicRoute
+          {...props}
+          restricted={false}
+          path="/"
+          exact
+          component={Home}
+        />
+        <PublicRoute
+          {...props}
+          restricted={false}
+          path="/news"
+          exact
+          component={NewsMain}
+        />
+        <PublicRoute
+          {...props}
+          restricted={false}
+          path="/articles/:id"
+          exact
+          component={NewsArticle}
+        />
+        <PublicRoute
+          {...props}
+          restricted={false}
+          path="/videos/:id"
+          exact
+          component={VideoArticle}
+        />
+        <PublicRoute
+          {...props}
+          restricted={false}
+          path="/videos"
+          exact
+          component={VideosMain}
+        />
+        <PublicRoute
+          {...props}
+          restricted={true}
+          path="/sign-in"
+          exact
+          component={SignIn}
+        />
+        <PrivateRoute
+          {...props}
+          path="/dashboard"
+          exact
+          component={Dashboard}
+        />
       </Switch>
     </Layout>
   );
