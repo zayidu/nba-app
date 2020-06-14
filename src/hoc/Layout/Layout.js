@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
+
 import './layout.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
+// import Announcement from '../../components/Announcement/Announcement';
 
 class Layout extends Component {
   state = {
@@ -23,6 +25,7 @@ class Layout extends Component {
           // onHideNav={() => this.toggleSideNav(false)}
           // onOpenNav={() => this.toggleSideNav(true)}
         />
+        {/* <Announcement /> */}
         {this.props.children}
         <Footer />
       </div>
